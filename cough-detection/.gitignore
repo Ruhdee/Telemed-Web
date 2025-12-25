@@ -1,0 +1,14 @@
+# Training data (DO NOT COMMIT)
+cough-detection/data/
+cough-detection/features/
+*.wav
+*.webm
+*.ogg
+
+# Cache / artifacts
+__pycache__/
+*.pkl
+
+
+# Virtual environment
+.venv/
