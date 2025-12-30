@@ -1,12 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Video, Mic, Camera, Send } from "lucide-react";
+import { Video, Mic, MicOff, Camera, CameraOff, PhoneOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useWebRTC } from "@/hooks/useWebRTC";
 
 export default function ConsultationPage() {
     const [mode, setMode] = useState<'live' | 'offline'>('live');
+    const [micOn, setMicOn] = useState(true);
+    const [cameraOn, setCameraOn] = useState(true);
+
+    // Hardcoded room for now - in production this would come from params or prop
+    const roomId = "consultation-room-1";
+
+    const {
+        localStream,
+        remoteStream,
+        startLocalStream,
+        toggleAudio,
+        toggleVideo,
+        peerId
+    } = useWebRTC(roomId);
+
+    const localVideoRef = useRef<HTMLVideoElement>(null);
+    const remoteVideoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        if (mode === 'live') {
+            startLocalStream();
+        }
+    }, [mode]);
+
+    useEffect(() => {
+        if (localVideoRef.current && localStream) {
+            localVideoRef.current.srcObject = localStream;
+        }
+    }, [localStream]);
+
+    useEffect(() => {
+        if (remoteVideoRef.current && remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+        }
+    }, [remoteStream]);
+
+    const handleMicToggle = () => {
+        setMicOn(!micOn);
+        toggleAudio(!micOn);
+    };
+
+    const handleCameraToggle = () => {
+        setCameraOn(!cameraOn);
+        toggleVideo(!cameraOn);
+    };
 
     return (
         <div className="space-y-6">
@@ -34,17 +80,59 @@ export default function ConsultationPage() {
                     animate={{ opacity: 1 }}
                     className="flex flex-col items-center justify-center min-h-[500px] glass-panel p-8"
                 >
-                    <div className="w-full max-w-3xl aspect-video bg-gray-900 rounded-2xl relative overflow-hidden shadow-2xl flex items-center justify-center">
-                        <div className="text-center text-white/50">
-                            <Video size={48} className="mx-auto mb-4 opacity-50" />
-                            <p>Waiting for Doctor...</p>
+                    <div className="w-full max-w-4xl aspect-video bg-gray-900 rounded-2xl relative overflow-hidden shadow-2xl flex items-center justify-center">
+
+                        {/* Remote Video (Main) */}
+                        {remoteStream ? (
+                            <video
+                                ref={remoteVideoRef}
+                                autoPlay
+                                playsInline
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="text-center text-white/50">
+                                <Video size={48} className="mx-auto mb-4 opacity-50" />
+                                <p>Waiting for Doctor...</p>
+                                <p className="text-xs mt-2">Room ID: {roomId}</p>
+                            </div>
+                        )}
+
+                        {/* Local Video (PIP) */}
+                        <div className="absolute top-4 right-4 w-48 aspect-video bg-black/50 rounded-xl overflow-hidden border border-white/20 shadow-lg">
+                            <video
+                                ref={localVideoRef}
+                                autoPlay
+                                playsInline
+                                muted
+                                className="w-full h-full object-cover transform -scale-x-100"
+                            />
+                            {!cameraOn && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-gray-800 text-white/50">
+                                    <CameraOff size={20} />
+                                </div>
+                            )}
                         </div>
 
                         {/* Controls */}
                         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4">
-                            <button className="p-4 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg hover:scroll-m-1">End</button>
-                            <button className="p-4 rounded-full bg-gray-700/50 backdrop-blur text-white hover:bg-gray-600"><Mic /></button>
-                            <button className="p-4 rounded-full bg-gray-700/50 backdrop-blur text-white hover:bg-gray-600"><Camera /></button>
+                            <button
+                                onClick={handleMicToggle}
+                                className={`p-4 rounded-full backdrop-blur text-white hover:bg-gray-600 transition-colors ${micOn ? 'bg-gray-700/50' : 'bg-red-500/80 hover:bg-red-600'}`}
+                            >
+                                {micOn ? <Mic /> : <MicOff />}
+                            </button>
+
+                            <button className="p-4 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg hover:scroll-m-1">
+                                <PhoneOff />
+                            </button>
+
+                            <button
+                                onClick={handleCameraToggle}
+                                className={`p-4 rounded-full backdrop-blur text-white hover:bg-gray-600 transition-colors ${cameraOn ? 'bg-gray-700/50' : 'bg-red-500/80 hover:bg-red-600'}`}
+                            >
+                                {cameraOn ? <Camera /> : <CameraOff />}
+                            </button>
                         </div>
                     </div>
                 </motion.div>
