@@ -1,35 +1,43 @@
-const sequelize = require('../config/database');
-const User = require('./User');
-const Doctor = require('./Doctor');
-const Appointment = require('./Appointment');
-const Inventory = require('./Inventory');
-const Order = require('./Order');
+const Sequelize = require('sequelize');
+// const config = require('../config/database');
+
+const sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASS,
+    {
+        host: process.env.DB_HOST,
+        dialect: 'mysql',
+        logging: false,
+    }
+);
+
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+// Import Models
+db.Patient = require('./Patient')(sequelize, Sequelize);
+db.Doctor = require('./Doctor')(sequelize, Sequelize);
+db.Nurse = require('./Nurse')(sequelize, Sequelize); // New
+db.Inventory = require('./Inventory')(sequelize, Sequelize);
+db.Order = require('./Order')(sequelize, Sequelize);
+db.Appointment = require('./Appointment')(sequelize, Sequelize);
 
 // Associations
 
-// User has a Doctor profile (if role is doctor)
-User.hasOne(Doctor, { foreignKey: 'userId', onDelete: 'CASCADE' });
-Doctor.belongsTo(User, { foreignKey: 'userId' });
+// 1. Appointments (Patient <-> Doctor)
+db.Patient.hasMany(db.Appointment, { foreignKey: 'patientId', as: 'appointments' });
+db.Appointment.belongsTo(db.Patient, { foreignKey: 'patientId', as: 'patient' });
 
-// Appointments
-Doctor.hasMany(Appointment, { foreignKey: 'doctorId' });
-Appointment.belongsTo(Doctor, { foreignKey: 'doctorId' });
+db.Doctor.hasMany(db.Appointment, { foreignKey: 'doctorId', as: 'appointments' });
+db.Appointment.belongsTo(db.Doctor, { foreignKey: 'doctorId', as: 'doctor' });
 
-User.hasMany(Appointment, { foreignKey: 'patientId', as: 'patientAppointments' });
-Appointment.belongsTo(User, { foreignKey: 'patientId', as: 'patient' });
+// 2. Orders (Patient <-> Inventory)
+db.Patient.hasMany(db.Order, { foreignKey: 'patientId', as: 'orders' });
+db.Order.belongsTo(db.Patient, { foreignKey: 'patientId', as: 'patient' });
 
-// Pharma / Orders
-User.hasMany(Order, { foreignKey: 'patientId' });
-Order.belongsTo(User, { foreignKey: 'patientId' });
+db.Inventory.hasMany(db.Order, { foreignKey: 'medicineId' });
+db.Order.belongsTo(db.Inventory, { foreignKey: 'medicineId', as: 'medicine' });
 
-Inventory.hasMany(Order, { foreignKey: 'medicineId' });
-Order.belongsTo(Inventory, { foreignKey: 'medicineId', as: 'medicine' });
-
-module.exports = {
-    sequelize,
-    User,
-    Doctor,
-    Appointment,
-    Inventory,
-    Order
-};
+module.exports = db;

@@ -22,4 +22,8 @@ router.post('/appointments', verifyToken, appointmentController.bookAppointment)
 // Update status (Doctor)
 router.put('/appointments/:id/status', verifyToken, verifyRole(['doctor']), appointmentController.updateStatus);
 
+// Doctor Routes
+const doctorController = require('../controllers/doctorController');
+router.get('/doctors', verifyToken, doctorController.getAllDoctors);
+
 module.exports = router;

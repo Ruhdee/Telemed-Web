@@ -4,19 +4,19 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // Define simplified roles
-export type UserRole = "patient" | "doctor" | "pharmacist" | "admin";
+export type UserRole = "patient" | "doctor" | "pharmacist" | "admin" | "nurse";
 
 export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: UserRole;
+    id: number;
+    name: string;
+    email: string;
+    role: UserRole;
 }
 
 interface AuthContextType {
     user: User | null;
-    login: (email: string, password: string) => Promise<void>;
-    register: (name: string, email: string, password: string, role: UserRole) => Promise<void>;
+    login: (email: string, password: string, role?: UserRole) => Promise<void>;
+    register: (name: string, email: string, password: string, role: UserRole, phone: string, specialization?: string, experience?: number, shift?: string) => Promise<void>;
     logout: () => void;
 }
 
@@ -37,17 +37,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-    const login = async (email: string, password: string) => {
+    const login = async (email: string, password: string, role: UserRole = 'patient') => {
         const response = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, role }),
         });
 
         if (!response.ok) {
-            throw new Error('Invalid credentials');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Invalid credentials');
         }
 
         const data = await response.json();
@@ -68,17 +69,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         else router.push("/dashboard");
     };
 
-    const register = async (name: string, email: string, password: string, role: UserRole) => {
+    const register = async (name: string, email: string, password: string, role: UserRole, phone: string, specialization?: string, experience?: number, shift?: string) => {
         const response = await fetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password, role }),
+            body: JSON.stringify({ name, email, password, role, phone, specialization, experience, shift }),
         });
 
         if (!response.ok) {
-            throw new Error('Registration failed');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Registration failed');
         }
 
         const data = await response.json();

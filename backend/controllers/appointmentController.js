@@ -1,21 +1,19 @@
-const { Appointment, Doctor, User } = require('../models');
+const { Appointment, Doctor, Patient } = require('../models');
 
 // Get Doctor Appointments (Doctor view)
 exports.getDoctorAppointments = async (req, res) => {
     try {
-        // Assuming the user is a doctor, we need to find their Doctor Profile ID first
-        // Or if logged in as user, find associated doctor profile
-        const doctorProfile = await Doctor.findOne({ where: { userId: req.user.user_id } });
-
-        if (!doctorProfile) return res.status(404).json({ message: "Doctor profile not found" });
+        // Since the user is logged in as a doctor, req.user.user_id IS the doctor's ID.
+        const doctorId = req.user.user_id;
 
         const appointments = await Appointment.findAll({
-            where: { doctorId: doctorProfile.id },
-            include: [{ model: User, as: 'patient', attributes: ['name', 'email'] }]
+            where: { doctorId: doctorId },
+            include: [{ model: Patient, as: 'patient', attributes: ['name', 'email'] }]
         });
 
         res.status(200).json(appointments);
     } catch (err) {
+        console.error(err);
         res.status(500).send("Error fetching appointments");
     }
 };

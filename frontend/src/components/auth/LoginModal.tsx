@@ -16,21 +16,23 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     const [error, setError] = useState("");
     const { login } = useAuth();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const [role, setRole] = useState<"patient" | "doctor" | "nurse" | "pharmacist">("patient");
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         setError("");
+        setIsLoading(true);
+
         try {
-            await login(email, password);
+            // @ts-ignore
+            await login(email, password, role);
             onClose();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Login failed");
+            setError("Invalid email or password");
         } finally {
             setIsLoading(false);
         }
     };
-
-
 
     return (
         <AnimatePresence>
@@ -66,12 +68,27 @@ export const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                                 </button>
                             </div>
 
-                            <form onSubmit={handleLogin} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-4">
                                 {error && (
                                     <div className="text-red-500 text-sm text-center">
                                         {error}
                                     </div>
                                 )}
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-[var(--gold-dark)]">Role</label>
+                                    <select
+                                        value={role}
+                                        onChange={(e) => setRole(e.target.value as any)}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[var(--gold-primary)]/20 focus:border-[var(--gold-primary)] transition-all bg-white/50"
+                                    >
+                                        <option value="patient">Patient</option>
+                                        <option value="doctor">Doctor</option>
+                                        <option value="nurse">Nurse</option>
+                                        <option value="pharmacist">Pharmacist</option>
+                                    </select>
+                                </div>
+
                                 <div className="space-y-2">
                                     <label className="text-sm font-semibold text-[var(--gold-dark)]">Email Address</label>
                                     <div className="relative">

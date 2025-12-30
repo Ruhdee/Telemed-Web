@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const Doctor = sequelize.define('Doctor', {
+    const Patient = sequelize.define('Patient', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -24,27 +24,11 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: true
         },
-        specialization: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        experience: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0
-        },
-        availability: {
-            type: DataTypes.JSON,
-            defaultValue: []
-        },
-        isOnline: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
-        },
         role: {
             type: DataTypes.ENUM('patient', 'doctor', 'nurse'),
-            defaultValue: 'doctor'
+            defaultValue: 'patient'
         }
     });
 
-    return Doctor;
+    return Patient;
 };

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Lock, Mail, ArrowRight, User, UserPlus } from "lucide-react";
+import { X, Lock, Mail, ArrowRight, User, UserPlus, Phone, Stethoscope, Clock, Briefcase } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/Button";
 import { useAuth, UserRole } from "@/context/AuthContext";
@@ -13,6 +13,10 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [specialization, setSpecialization] = useState("");
+    const [experience, setExperience] = useState("");
+    const [shift, setShift] = useState("Morning");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState<UserRole>("patient");
@@ -31,7 +35,7 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
         }
 
         try {
-            await register(name, email, password, role);
+            await register(name, email, password, role, phone, specialization, parseInt(experience), shift);
             onClose();
         } catch (err) {
             setError(err instanceof Error ? err.message : "Registration failed");
@@ -43,6 +47,7 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
     const roles = [
         { id: "patient", label: "Patient", icon: <User size={18} /> },
         { id: "doctor", label: "Doctor", icon: <UserPlus size={18} /> },
+        { id: "nurse", label: "Nurse", icon: <UserPlus size={18} /> },
         { id: "pharmacist", label: "Pharmacist", icon: <UserPlus size={18} /> },
         { id: "admin", label: "Admin", icon: <UserPlus size={18} /> },
     ];
@@ -119,6 +124,21 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
                                 </div>
 
                                 <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-[var(--gold-dark)]">Phone Number</label>
+                                    <div className="relative">
+                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:border-[var(--gold-primary)] focus:ring-2 focus:ring-[var(--gold-primary)]/20 outline-none transition-all"
+                                            placeholder="+1 (555) 000-0000"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
                                     <label className="text-sm font-semibold text-[var(--gold-dark)]">Password</label>
                                     <div className="relative">
                                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -164,10 +184,63 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
                                     </select>
                                 </div>
 
+                                {role === 'doctor' && (
+                                    <>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-[var(--gold-dark)]">Specialization</label>
+                                            <div className="relative">
+                                                <Stethoscope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                <input
+                                                    type="text"
+                                                    value={specialization}
+                                                    onChange={(e) => setSpecialization(e.target.value)}
+                                                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:border-[var(--gold-primary)] focus:ring-2 focus:ring-[var(--gold-primary)]/20 outline-none transition-all"
+                                                    placeholder="e.g. Cardiology"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-[var(--gold-dark)]">Experience (Years)</label>
+                                            <div className="relative">
+                                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                                <input
+                                                    type="number"
+                                                    value={experience}
+                                                    onChange={(e) => setExperience(e.target.value)}
+                                                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:border-[var(--gold-primary)] focus:ring-2 focus:ring-[var(--gold-primary)]/20 outline-none transition-all"
+                                                    placeholder="e.g. 5"
+                                                    required
+                                                    min="0"
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
+                                {role === 'nurse' && (
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-semibold text-[var(--gold-dark)]">Shift</label>
+                                        <div className="relative">
+                                            <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                                            <select
+                                                value={shift}
+                                                onChange={(e) => setShift(e.target.value)}
+                                                className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/50 border border-gray-200 focus:border-[var(--gold-primary)] focus:ring-2 focus:ring-[var(--gold-primary)]/20 outline-none transition-all"
+                                                required
+                                            >
+                                                <option value="Morning">Morning</option>
+                                                <option value="Night">Night</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <Button
                                     variant="primary"
                                     className="w-full justify-center mt-4"
                                     disabled={isLoading}
+                                    type="submit"
                                 >
                                     {isLoading ? (
                                         <span className="flex items-center gap-2">
@@ -180,9 +253,9 @@ export const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
                                 </Button>
                             </form>
                         </div>
-                    </motion.div>
+                    </motion.div >
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence >
     );
 };
