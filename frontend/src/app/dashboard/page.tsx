@@ -8,6 +8,7 @@ import { DiagnosisUploadModal } from "@/components/dashboard/DiagnosisUploadModa
 import { MedicineReminderWidget } from "@/components/dashboard/MedicineReminderWidget";
 import { VitalsScannerModal } from "@/components/dashboard/VitalsScannerModal";
 import { ARLensModal } from "@/components/dashboard/ARLensModal";
+import { useAuth } from "@/context/AuthContext";
 
 // Mock Timeline Data
 const timeline = [
@@ -20,6 +21,7 @@ export default function DashboardPage() {
     const [selectedModel, setSelectedModel] = useState<string | null>(null);
     const [showVitalsScanner, setShowVitalsScanner] = useState(false);
     const [showARLens, setShowARLens] = useState(false);
+    const { user } = useAuth();
 
     return (
         <div className="space-y-8">
@@ -33,7 +35,7 @@ export default function DashboardPage() {
 
             <header className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2">Hello, Prathmesh</h1>
+                    <h1 className="text-3xl font-bold mb-2">Hello, {user?.name.split(' ')[0] || "Patient"}</h1>
                     <p className="text-[var(--text-secondary)]">Your health dashboard overview.</p>
                 </div>
                 <Button variant="primary">New Consultation</Button>

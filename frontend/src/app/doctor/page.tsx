@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Users, Calendar, AlertTriangle, FileText, Activity, Video, Home } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
 
 // Mock Data for Doctor's Queue
 const upcomingAppointments = [
@@ -32,13 +33,14 @@ const upcomingAppointments = [
 ];
 
 export default function DoctorDashboard() {
+    const { user } = useAuth(); // START of added code
     return (
         <div className="min-h-screen bg-[var(--bg-warm)] pb-10">
             {/* Top Bar */}
             <nav className="glass-panel sticky top-0 z-40 px-8 py-4 flex justify-between items-center mb-8 mx-4 mt-2">
                 <h1 className="text-xl font-bold flex items-center gap-2">
                     <span className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">Dr</span>
-                    Dr. Sharma <span className="text-sm font-normal text-[var(--text-secondary)]">| Cardiology</span>
+                    {user?.name || "Dr. User"} <span className="text-sm font-normal text-[var(--text-secondary)]">| {user?.role === 'doctor' ? 'Specialist' : 'Doctor'}</span>
                 </h1>
                 <div className="flex gap-4">
                     <Link href="/">
