@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  /* Premium Gold Palet */
+  --gold-primary: #d4af37;
+  --gold-light: #f3e5ab;
+  --gold-dark: #aa8c2c;
+  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
+
+  --bronze: #cd7f32;
+  --bronze-light: #e6be8a;
+
+  --bg-warm: #fdfbf7;
+  --bg-gradient: radial-gradient(circle at top left, #fdfbf7 0%, #fff 100%);
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-gold: #8a7018;
+
+  --font-heading: var(--font-outfit);
+  --font-body: var(--font-inter);
+}
+
+/* Global Reset & Base */
+body {
+  color: var(--text-primary);
+  background: var(--bg-warm);
+  background-image:
+    radial-gradient(at 0% 0%, hsla(38, 48%, 90%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(45, 50%, 92%, 1) 0, transparent 50%);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Typography Scale */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+/* Utility Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
+
+/* Glass Card Utility */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+}
