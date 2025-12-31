@@ -27,6 +27,14 @@ requests        # Call external APIs for outbreaks, hospitals, etc. [web:23]
 SQLAlchemy
 psycopg2-binary # PostgreSQL driver [web:29][web:33]
 
+# --- ML / Scikit-Learn ---
+scikit-learn
+joblib
+xgboost
+imbalanced-learn
+tensorflow
+opencv-python
+
 # --- Validation & serialization ---
 pydantic
 

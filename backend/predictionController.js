@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Define Python Path explicitly to avoid ENOENT issues
-const PYTHON_PATH = '/usr/bin/python3';
+const PYTHON_PATH = 'python3';
 
 // Heart Disease Prediction
 export const predictHeartDisease = async (req, res) => {
@@ -437,8 +437,8 @@ export const predictBrainTumor = async (req, res) => {
     const pythonScript = path.join(mriDir, 'predict_mri.py');
     const imagePath = path.resolve(req.file.path);
 
-    // Run Python script
-    const python = spawn(PYTHON_PATH, [pythonScript, imagePath], {
+    // Run Python script - Use python3.11 for TensorFlow compatibility
+    const python = spawn('/opt/homebrew/bin/python3.11', [pythonScript, imagePath], {
       cwd: mriDir
     });
 
@@ -557,8 +557,8 @@ export const predictRetinopathy = async (req, res) => {
     const pythonScript = path.join(retinoDir, 'predict_retinopathy.py');
     const imagePath = path.resolve(req.file.path);
 
-    // Run Python script
-    const python = spawn(PYTHON_PATH, [pythonScript, imagePath], {
+    // Run Python script - Use python3.11 for TensorFlow compatibility
+    const python = spawn('/opt/homebrew/bin/python3.11', [pythonScript, imagePath], {
       cwd: retinoDir
     });
 
@@ -803,8 +803,8 @@ export const predictSkinDisease = async (req, res) => {
     console.log('Skin disease prediction - Script path:', pythonScript);
     console.log('Skin disease prediction - Image path:', imagePath);
 
-    // Run Python script
-    const python = spawn(PYTHON_PATH, [pythonScript, imagePath], {
+    // Run Python script - Use python3.11 for TensorFlow compatibility
+    const python = spawn('/opt/homebrew/bin/python3.11', [pythonScript, imagePath], {
       cwd: skinDir
     });
 
