@@ -8,6 +8,8 @@ import { DiagnosisUploadModal } from "@/components/dashboard/DiagnosisUploadModa
 import { MedicineReminderWidget } from "@/components/dashboard/MedicineReminderWidget";
 import { VitalsScannerModal } from "@/components/dashboard/VitalsScannerModal";
 import { ARLensModal } from "@/components/dashboard/ARLensModal";
+import { BookAppointmentModal } from "@/components/dashboard/BookAppointmentModal";
+import { useAuth } from "@/context/AuthContext";
 
 // Mock Timeline Data
 const timeline = [
@@ -20,6 +22,8 @@ export default function DashboardPage() {
     const [selectedModel, setSelectedModel] = useState<string | null>(null);
     const [showVitalsScanner, setShowVitalsScanner] = useState(false);
     const [showARLens, setShowARLens] = useState(false);
+    const [showBookingModal, setShowBookingModal] = useState(false);
+    const { user } = useAuth();
 
     return (
         <div className="space-y-8">
@@ -28,15 +32,16 @@ export default function DashboardPage() {
                 onClose={() => setSelectedModel(null)}
                 modelType={selectedModel}
             />
+            <BookAppointmentModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
             <VitalsScannerModal isOpen={showVitalsScanner} onClose={() => setShowVitalsScanner(false)} />
             <ARLensModal isOpen={showARLens} onClose={() => setShowARLens(false)} />
 
             <header className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2">Hello, Prathmesh</h1>
+                    <h1 className="text-3xl font-bold mb-2">Hello, {user?.name.split(' ')[0] || "Patient"}</h1>
                     <p className="text-[var(--text-secondary)]">Your health dashboard overview.</p>
                 </div>
-                <Button variant="primary">New Consultation</Button>
+                <Button variant="primary" onClick={() => setShowBookingModal(true)}>New Consultation</Button>
             </header>
 
             {/* Vitals / Stats Row + Advanced Tools */}
