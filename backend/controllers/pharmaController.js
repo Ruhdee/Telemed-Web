@@ -26,28 +26,48 @@ exports.addMedicine = async (req, res) => {
 // Create Order (Patient)
 exports.createOrder = async (req, res) => {
     try {
-        const { medicineId, quantity } = req.body;
-        const userId = req.user.user_id;
+        const { items, deliveryDate } = req.body; // Expecting items array and deliveryDate
+        const userId = req.user.user_id || req.user.id; // Handle different token payloads if any
 
-        const medicine = await Inventory.findByPk(medicineId);
-        if (!medicine) return res.status(404).send("Medicine not found");
-        if (medicine.stock < quantity) return res.status(400).send("Insufficient stock");
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).send("No items in order");
+        }
 
-        const totalPrice = medicine.price * quantity;
+        if (!deliveryDate) {
+            return res.status(400).json({ error: 'Delivery date is required' });
+        }
 
-        const order = await Order.create({
-            patientId: userId,
-            medicineId,
-            quantity,
-            totalPrice,
-            status: 'Pending'
-        });
+        const orders = [];
+        let grandTotal = 0;
 
-        // Deduct stock
-        medicine.stock -= quantity;
-        await medicine.save();
+        for (const item of items) {
+            const { medicineId, quantity } = item;
 
-        res.status(201).json(order);
+            const medicine = await Inventory.findByPk(medicineId);
+            if (!medicine) return res.status(404).send(`Medicine with ID ${medicineId} not found`);
+
+            if (medicine.stock < quantity) return res.status(400).send(`Insufficient stock for ${medicine.name}`);
+
+            // Deduct stock
+            medicine.stock -= quantity;
+            await medicine.save();
+
+            const totalPrice = medicine.price * quantity;
+            grandTotal += totalPrice;
+
+            const order = await Order.create({
+                patientId: userId,
+                medicineId,
+                quantity,
+                totalPrice,
+                status: 'Pending',
+                deliveryDate: deliveryDate
+            });
+
+            orders.push(order);
+        }
+
+        res.status(201).json({ message: 'Order placed successfully', orders, grandTotal });
     } catch (err) {
         console.log(err);
         res.status(500).send("Error creating order");
