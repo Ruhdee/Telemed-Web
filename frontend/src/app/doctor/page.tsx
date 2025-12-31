@@ -120,7 +120,9 @@ export default function DoctorDashboard() {
 
                                 {/* Actions */}
                                 <div className="flex flex-col justify-center gap-2 min-w-[140px]">
-                                    <Button variant="primary" className="w-full text-sm h-10" icon={<Video size={16} />}>Start Consult</Button>
+                                    <Link href="/dashboard/consultation">
+                                        <Button variant="primary" className="w-full text-sm h-10" icon={<Video size={16} />}>Start Consult</Button>
+                                    </Link>
                                     <Button variant="secondary" className="w-full text-sm h-10">View History</Button>
                                 </div>
                             </div>

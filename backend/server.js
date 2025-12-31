@@ -1,37 +1,53 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { sequelize } = require('./models');
-const { createDatabaseIfNotExists } = require('./config/database');
-const apiRoutes = require('./routes/api');
+require("dotenv").config();
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
+const { Server } = require("socket.io");
+
+const { sequelize } = require("./models");
+const { createDatabaseIfNotExists } = require("./config/database");
+const apiRoutes = require("./routes/api");
+const socketHandler = require("./socket");
 
 const app = express();
+const server = http.createServer(app);
+
 const PORT = process.env.PORT || 5000;
 
+/* Middleware */
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api', apiRoutes);
+/* API Routes */
+app.use("/api", apiRoutes);
 
-// Health Check
-app.get('/', (req, res) => {
-    res.send('Telemedicine Backend is Running');
+/* Check  */
+app.get("/", (req, res) => {
+    res.send("Telemedicine Backend is Running");
 });
 
-// Database Sync and Server Start
-// NOTE: { alter: true } updates the schema without dropping tables.
-// Change to { force: true } only if you want to reset DB (data loss).
+/*  Socket.IO  */
+const io = new Server(server, {
+    cors: {
+        origin: "*", // dev only
+        methods: ["GET", "POST"],
+    },
+});
+
+socketHandler(io);
+
+/*  DB + Server Start  */
 const startServer = async () => {
     try {
         await createDatabaseIfNotExists();
         await sequelize.sync({ alter: true });
-        console.log('Database connected and synced');
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
+        console.log("Database connected and synced");
+
+        server.listen(PORT, () => {
+            console.log(`Server running (API + Socket) on port ${PORT}`);
         });
     } catch (err) {
-        console.error('Database connection failed:', err);
+        console.error("Server startup failed:", err);
     }
 };
 
