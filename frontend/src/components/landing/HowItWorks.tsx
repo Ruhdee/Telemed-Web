@@ -12,7 +12,7 @@ const steps = [
 
 export const HowItWorks = () => {
     return (
-        <section className="py-20 px-6">
+        <section id="how-it-works" className="py-20 px-6">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">How it Works</h2>

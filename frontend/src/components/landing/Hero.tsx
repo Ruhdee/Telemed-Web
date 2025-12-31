@@ -42,7 +42,7 @@ export const Hero = () => {
 
                     <h1 className="mb-8 font-bold leading-[1.1]">
                         Your Health, <br />
-                        <span className="text-gradient-gold">
+                        <span className="text-[var(--text-primary)]">
                             elevated to Gold Standard.
                         </span>
                     </h1>

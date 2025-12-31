@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { useAuth } from "@/context/AuthContext";
 import { Chatbot } from "@/components/features/Chatbot";
 import { EmergencySOS } from "@/components/dashboard/EmergencySOS";
 
@@ -25,6 +26,7 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const { logout } = useAuth();
 
     return (
         <div className="flex min-h-screen pt-20 px-4 md:px-8 pb-8 gap-6 flex-col lg:flex-row">
@@ -69,7 +71,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </nav>
 
                 <div className="mt-auto pt-4 border-t border-[var(--gold-primary)]/20">
-                    <div className="flex items-center gap-3 px-4 py-2 text-[var(--text-secondary)] hover:text-red-500 cursor-pointer transition-colors">
+                    <div onClick={logout} className="flex items-center gap-3 px-4 py-2 text-[var(--text-secondary)] hover:text-red-500 cursor-pointer transition-colors">
                         <LogOut size={20} />
                         <span>Sign Out</span>
                     </div>
