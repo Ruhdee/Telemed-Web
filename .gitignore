@@ -56,3 +56,10 @@ htmlcov/
 # Antigravity/Gemini
 .gemini/
 
+# AI Models (large files)
+models/
+*.h5
+*.pt
+*.pth
+*.keras
+
