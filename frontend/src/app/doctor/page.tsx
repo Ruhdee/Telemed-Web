@@ -4,41 +4,46 @@ import { motion } from "framer-motion";
 import { Users, Calendar, AlertTriangle, FileText, Activity, Video, Home } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from "react";
 
-// Mock Data for Doctor's Queue
-const upcomingAppointments = [
-    {
-        id: 1,
-        patient: "Prathmesh Tiwari",
-        time: "10:00 AM",
-        type: "Video Consult",
-        symptoms: "High Fever, dry cough (3 days)",
-        aiRiskScore: "High",
-        riskColor: "bg-red-100 text-red-700",
-        summary: "Patient timeline shows progressively worsening cough. Acoustic analysis detected potential bronchitis markers.",
-        status: "Waiting"
-    },
-    {
-        id: 2,
-        patient: "Anjali Mehta",
-        time: "10:30 AM",
-        type: "Offline Review",
-        symptoms: "Migraine",
-        aiRiskScore: "Low",
-        riskColor: "bg-green-100 text-green-700",
-        summary: "Recurring headache. BP history normal. Requesting update on prescription.",
-        status: "Pending Review"
-    }
-];
+// Mock Data for Doctor's Queue -> Removed in favor of real data
 
 export default function DoctorDashboard() {
+    const { user } = useAuth();
+    const [appointments, setAppointments] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('http://localhost:5000/api/appointments/doctor', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setAppointments(data);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchAppointments();
+    }, []);
+
+    // Format date helper
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
     return (
         <div className="min-h-screen bg-[var(--bg-warm)] pb-10">
             {/* Top Bar */}
             <nav className="glass-panel sticky top-0 z-40 px-8 py-4 flex justify-between items-center mb-8 mx-4 mt-2">
                 <h1 className="text-xl font-bold flex items-center gap-2">
                     <span className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">Dr</span>
-                    Dr. Sharma <span className="text-sm font-normal text-[var(--text-secondary)]">| Cardiology</span>
+                    {user?.name || "Dr. User"} <span className="text-sm font-normal text-[var(--text-secondary)]">| {user?.role === 'doctor' ? 'Specialist' : 'Doctor'}</span>
                 </h1>
                 <div className="flex gap-4">
                     <Link href="/">
@@ -53,9 +58,9 @@ export default function DoctorDashboard() {
             <main className="max-w-7xl mx-auto px-6 space-y-6">
                 <div className="grid md:grid-cols-4 gap-6 mb-8">
                     {[
-                        { label: "Today&apos;s Patients", val: "12", icon: <Users /> },
+                        { label: "Today&apos;s Patients", val: appointments.length.toString(), icon: <Users /> },
                         { label: "Pending Reports", val: "4", icon: <FileText /> },
-                        { label: "Critical Alerts", val: "2", icon: <AlertTriangle className="text-red-500" /> },
+                        { label: "Critical Alerts", val: appointments.filter(a => a.aiRiskScore === 'High').length.toString(), icon: <AlertTriangle className="text-red-500" /> },
                         { label: "Avg Consult Time", val: "14m", icon: <Activity /> },
                     ].map((stat, i) => (
                         <div key={i} className="glass-panel p-4 flex items-center justify-between">
@@ -71,7 +76,10 @@ export default function DoctorDashboard() {
                 <h2 className="text-2xl font-bold mb-4">Patient Queue & AI Insights</h2>
 
                 <div className="space-y-4">
-                    {upcomingAppointments.map((appt) => (
+                    {appointments.length === 0 && (
+                        <p className="text-center text-gray-500 py-10">No upcoming appointments.</p>
+                    )}
+                    {appointments.map((appt) => (
                         <motion.div
                             key={appt.id}
                             initial={{ opacity: 0, y: 10 }}
@@ -82,11 +90,13 @@ export default function DoctorDashboard() {
                                 {/* Patient Basic Info */}
                                 <div className="min-w-[200px]">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <h3 className="text-lg font-bold">{appt.patient}</h3>
-                                        <span className={`text-xs px-2 py-0.5 rounded ${appt.riskColor} font-bold`}>Risk: {appt.aiRiskScore}</span>
+                                        <h3 className="text-lg font-bold">{appt.patient?.name || "Unknown Patient"}</h3>
+                                        <span className={`text-xs px-2 py-0.5 rounded font-bold ${appt.aiRiskScore === 'High' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                                            Risk: {appt.aiRiskScore}
+                                        </span>
                                     </div>
                                     <p className="text-sm flex items-center gap-2 text-[var(--text-secondary)]">
-                                        <Calendar size={14} /> {appt.time} • {appt.type}
+                                        <Calendar size={14} /> {formatDate(appt.date)} • {appt.type}
                                     </p>
                                     <div className="mt-2 text-sm font-medium text-gray-700">
                                         Complaint: {appt.symptoms}
@@ -99,12 +109,11 @@ export default function DoctorDashboard() {
                                         <FileText size={12} /> AI Pre-Consult Summary
                                     </h4>
                                     <p className="text-sm text-gray-600 leading-relaxed">
-                                        {appt.summary}
+                                        {appt.summary || "AI Summary pending..."}
                                     </p>
                                     {appt.aiRiskScore === 'High' && (
                                         <div className="mt-2 flex gap-2">
-                                            <span className="text-xs bg-red-50 text-red-600 px-2 py-1 rounded border border-red-100">🚩 Outbreak Zone Detected</span>
-                                            <span className="text-xs bg-red-50 text-red-600 px-2 py-1 rounded border border-red-100">⚠️ Abnormal Acoustic Sign</span>
+                                            <span className="text-xs bg-red-50 text-red-600 px-2 py-1 rounded border border-red-100">🚩 Priority Access</span>
                                         </div>
                                     )}
                                 </div>
