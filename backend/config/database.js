@@ -1,8 +1,10 @@
-require('dotenv').config();
-const { Sequelize } = require('sequelize');
+import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
+
+dotenv.config();
 
 // Create database if it doesn't exist
-const createDatabaseIfNotExists = async () => {
+export const createDatabaseIfNotExists = async () => {
   const tempSequelize = new Sequelize('', process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
     dialect: 'mysql',
@@ -19,7 +21,7 @@ const createDatabaseIfNotExists = async () => {
   }
 };
 
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASS,
@@ -30,10 +32,3 @@ const sequelize = new Sequelize(
   }
 );
 
-// Initialize database creation
-// createDatabaseIfNotExists();
-
-module.exports = {
-  sequelize,
-  createDatabaseIfNotExists
-};

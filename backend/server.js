@@ -2,18 +2,14 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import dotenv from "dotenv";
 import socketHandler from "./socket.js";
 import predictionRoutes from "./routes/predictionRoutes.js";
-require("dotenv").config();
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
+import apiRoutes from "./routes/api.js";
+import { sequelize } from "./models/index.js";
+import { createDatabaseIfNotExists } from "./config/database.js";
 
-const { sequelize } = require("./models");
-const { createDatabaseIfNotExists } = require("./config/database");
-const apiRoutes = require("./routes/api");
-const socketHandler = require("./socket");
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -24,33 +20,26 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json()); // Enable JSON body parsing for tabular data
 
-// Setup routes
-app.use("/api/predict", predictionRoutes);
-app.use(express.json());
-
 /* API Routes */
+app.use("/api/predict", predictionRoutes);
 app.use("/api", apiRoutes);
 
-/* Check  */
+/* Root Check */
 app.get("/", (req, res) => {
     res.send("Telemedicine Backend is Running");
 });
 
-/*  Socket.IO  */
+/* Socket.IO */
 const io = new Server(server, {
     cors: {
-        origin: "*", // dev only
+        origin: "*", // Allow all for dev; restrict in prod
         methods: ["GET", "POST"],
     },
 });
 
 socketHandler(io);
 
-const PORT = 5001;
-server.listen(PORT, () => {
-    console.log(`Backend server running on port ${PORT}`);
-});
-/*  DB + Server Start  */
+/* DB + Server Start */
 const startServer = async () => {
     try {
         await createDatabaseIfNotExists();
