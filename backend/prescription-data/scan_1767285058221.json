@@ -1,0 +1,16 @@
+{
+  "data": {
+    "patient_name": "Armando Coquia",
+    "medications": [
+      {
+        "name": "Amoxicillin",
+        "dosage": "500mg",
+        "frequency": "3X a day",
+        "duration": "seven days",
+        "instructions": "1 cap 3X a day for seven days"
+      }
+    ]
+  },
+  "timestamp": 1767285058221,
+  "modelUsed": "gemini-2.5-flash"
+}

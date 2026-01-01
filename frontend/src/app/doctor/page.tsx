@@ -17,7 +17,7 @@ export default function DoctorDashboard() {
         const fetchAppointments = async () => {
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch('http://localhost:5000/api/appointments/doctor', {
+                const res = await fetch('http://localhost:5001/api/appointments/doctor', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -120,7 +120,7 @@ export default function DoctorDashboard() {
 
                                 {/* Actions */}
                                 <div className="flex flex-col justify-center gap-2 min-w-[140px]">
-                                    <Link href="/dashboard/consultation">
+                                    <Link href={`/doctor/consultation?patientName=${encodeURIComponent(appt.patient?.name || 'Patient')}&risk=${appt.aiRiskScore}&summary=${encodeURIComponent(appt.summary || '')}`}>
                                         <Button variant="primary" className="w-full text-sm h-10" icon={<Video size={16} />}>Start Consult</Button>
                                     </Link>
                                     <Button variant="secondary" className="w-full text-sm h-10">View History</Button>

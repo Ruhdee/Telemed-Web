@@ -22,6 +22,8 @@ app.use(express.json());
 /* API Routes */
 app.use("/api", apiRoutes);
 app.use("/api", ocrRoutes); // FIX: OCR routes mounted
+app.use("/api/chatbot", require("./routes/chatbot")); // New Chatbot route
+app.use("/api/predict", require("./routes/predictionRoutes")); // FIX: Prediction routes mounted
 
 /* Health Check */
 app.get("/", (req, res) => {

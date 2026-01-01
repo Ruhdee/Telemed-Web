@@ -1,16 +1,16 @@
-import { spawn } from 'child_process';
-import { error } from 'console';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const { spawn } = require("child_process");
+const { error } = require("console");
+const path = require("path");
+const { fileURLToPath } = require("url");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 // Define Python Path explicitly to avoid ENOENT issues
 const PYTHON_PATH = 'python3';
 
 // Heart Disease Prediction
-export const predictHeartDisease = async (req, res) => {
+exports.predictHeartDisease = async (req, res) => {
   try {
     console.log('Heart disease prediction request:', req.body);
     console.log('Model Status: Starting Heart Disease prediction...');
@@ -96,7 +96,7 @@ export const predictHeartDisease = async (req, res) => {
 };
 
 // Diabetes Prediction
-export const predictDiabetes = async (req, res) => {
+exports.predictDiabetes = async (req, res) => {
   try {
     console.log('Diabetes prediction request:', req.body);
     console.log('Model Status: Starting Diabetes prediction...');
@@ -178,7 +178,7 @@ export const predictDiabetes = async (req, res) => {
   }
 };
 
-export const predictLiver = async (req, res) => {
+exports.predictLiver = async (req, res) => {
   try {
     console.log('Liver disease prediction request:', req.body);
     console.log('Model Status: Starting Liver Disease prediction...');
@@ -260,11 +260,11 @@ export const predictLiver = async (req, res) => {
   }
 };
 
-export const predictStroke = async (req, res) => {
+exports.predictStroke = async (req, res) => {
   res.status(501).json({ error: 'Stroke prediction coming soon' });
 };
 
-export const predictCKD = async (req, res) => {
+exports.predictCKD = async (req, res) => {
   try {
     console.log('CKD prediction request:', req.body);
     console.log('Model Status: Starting CKD prediction...');
@@ -347,7 +347,7 @@ export const predictCKD = async (req, res) => {
 };
 
 // CNN Model predictions (image-based)
-export const predictTB = async (req, res) => {
+exports.predictTB = async (req, res) => {
   try {
     console.log('TB prediction request received');
     console.log('Model Status: Starting Tuberculosis prediction...');
@@ -423,7 +423,7 @@ export const predictTB = async (req, res) => {
   }
 };
 
-export const predictBrainTumor = async (req, res) => {
+exports.predictBrainTumor = async (req, res) => {
   try {
     console.log('Brain tumor prediction request received');
     console.log('Model Status: Starting Brain Tumor prediction...');
@@ -543,7 +543,7 @@ export const predictBrainTumor = async (req, res) => {
   }
 };
 
-export const predictRetinopathy = async (req, res) => {
+exports.predictRetinopathy = async (req, res) => {
   try {
     console.log('Retinopathy prediction request received');
     console.log('Model Status: Starting Retinopathy prediction...');
@@ -663,7 +663,7 @@ export const predictRetinopathy = async (req, res) => {
   }
 };
 
-export const predictPneumonia = async (req, res) => {
+exports.predictPneumonia = async (req, res) => {
   try {
     console.log('Pneumonia prediction request received');
     console.log('Model Status: Starting Pneumonia prediction...');
@@ -786,7 +786,7 @@ export const predictPneumonia = async (req, res) => {
   }
 };
 
-export const predictSkinDisease = async (req, res) => {
+exports.predictSkinDisease = async (req, res) => {
   try {
     console.log('Skin disease prediction request received');
     console.log('Model Status: Starting Skin Disease prediction...');

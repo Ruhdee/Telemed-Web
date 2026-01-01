@@ -1,8 +1,7 @@
-import express from "express";
-import multer from "multer";
-import path from "path";
-import { fileURLToPath } from "url";
-import {
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const {
     predictHeartDisease,
     predictDiabetes,
     predictLiver,
@@ -12,12 +11,9 @@ import {
     predictBrainTumor,
     predictRetinopathy,
     predictSkinDisease
-} from "../predictionController.js";
+} = require('../predictionController');
 
 const router = express.Router();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Configure storage for file uploads
 const storage = multer.diskStorage({
@@ -50,4 +46,4 @@ router.post("/brain-tumor", upload.single("image"), predictBrainTumor);
 router.post("/retinopathy", upload.single("image"), predictRetinopathy);
 router.post("/skin", upload.single("image"), predictSkinDisease);
 
-export default router;
+module.exports = router;

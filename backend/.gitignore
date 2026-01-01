@@ -61,4 +61,4 @@ datasets/
 # PyInstaller
 *.spec
 
-node_modules
+node_modules/

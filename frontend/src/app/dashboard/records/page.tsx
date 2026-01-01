@@ -56,7 +56,7 @@ export default function RecordsPage() {
             const formData = new FormData();
             formData.append('prescription', file);
 
-            const response = await fetch('http://localhost:5000/api/scan-prescription', {
+            const response = await fetch('http://localhost:5001/api/scan-prescription', {
                 method: 'POST',
                 body: formData,
             });
@@ -93,7 +93,7 @@ export default function RecordsPage() {
             const formData = new FormData();
             formData.append('report', file);
 
-            const response = await fetch('http://localhost:5000/api/scan-blood-report', {
+            const response = await fetch('http://localhost:5001/api/scan-blood-report', {
                 method: 'POST',
                 body: formData,
             });
@@ -138,8 +138,8 @@ export default function RecordsPage() {
                 <button
                     onClick={() => setActiveTab('prescriptions')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'prescriptions'
-                            ? 'bg-white text-[var(--gold-dark)] shadow-sm'
-                            : 'text-gray-600 hover:text-gray-800'
+                        ? 'bg-white text-[var(--gold-dark)] shadow-sm'
+                        : 'text-gray-600 hover:text-gray-800'
                         }`}
                 >
                     <Pill size={16} />
@@ -148,8 +148,8 @@ export default function RecordsPage() {
                 <button
                     onClick={() => setActiveTab('reports')}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'reports'
-                            ? 'bg-white text-[var(--gold-dark)] shadow-sm'
-                            : 'text-gray-600 hover:text-gray-800'
+                        ? 'bg-white text-[var(--gold-dark)] shadow-sm'
+                        : 'text-gray-600 hover:text-gray-800'
                         }`}
                 >
                     <TestTube size={16} />

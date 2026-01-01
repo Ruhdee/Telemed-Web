@@ -6,10 +6,9 @@ import { Button } from "@/components/ui/Button";
 import { useState } from "react";
 import { DiagnosisUploadModal } from "@/components/dashboard/DiagnosisUploadModal";
 import { MedicineReminderWidget } from "@/components/dashboard/MedicineReminderWidget";
-import { VitalsScannerModal } from "@/components/dashboard/VitalsScannerModal";
-import { ARLensModal } from "@/components/dashboard/ARLensModal";
 import { BookAppointmentModal } from "@/components/dashboard/BookAppointmentModal";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 // Mock Timeline Data
 const timeline = [
@@ -20,10 +19,9 @@ const timeline = [
 
 export default function DashboardPage() {
     const [selectedModel, setSelectedModel] = useState<string | null>(null);
-    const [showVitalsScanner, setShowVitalsScanner] = useState(false);
-    const [showARLens, setShowARLens] = useState(false);
     const [showBookingModal, setShowBookingModal] = useState(false);
     const { user } = useAuth();
+    const router = useRouter();
 
     return (
         <div className="space-y-8">
@@ -33,8 +31,6 @@ export default function DashboardPage() {
                 modelType={selectedModel}
             />
             <BookAppointmentModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
-            <VitalsScannerModal isOpen={showVitalsScanner} onClose={() => setShowVitalsScanner(false)} />
-            <ARLensModal isOpen={showARLens} onClose={() => setShowARLens(false)} />
 
             <header className="flex justify-between items-center mb-8">
                 <div>
@@ -44,7 +40,7 @@ export default function DashboardPage() {
                 <Button variant="primary" onClick={() => setShowBookingModal(true)}>New Consultation</Button>
             </header>
 
-            {/* Vitals / Stats Row + Advanced Tools */}
+            {/* Vitals / Stats Row */}
             <div className="grid md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-4">
                     {[
@@ -64,40 +60,10 @@ export default function DashboardPage() {
                             </div>
                         </motion.div>
                     ))}
-
-                    {/* Advanced Tool Triggers */}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setShowVitalsScanner(true)}
-                        className="rounded-2xl shadow-lg border border-white/20 p-4 bg-gradient-to-br from-blue-600 to-indigo-700 text-white cursor-pointer flex flex-col justify-between h-32 relative overflow-hidden group"
-                    >
-                        <div className="absolute top-0 right-0 md:w-32 md:h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform"></div>
-                        <ScanFace size={24} className="mb-2" />
-                        <div>
-                            <h3 className="font-bold leading-tight">Touchless Vitals</h3>
-                            <p className="text-xs text-blue-100 opacity-80">Scan via Webcam</p>
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setShowARLens(true)}
-                        className="rounded-2xl shadow-lg border border-white/20 p-4 bg-gradient-to-br from-indigo-900 to-purple-900 text-white cursor-pointer flex flex-col justify-between h-32 relative overflow-hidden group"
-                    >
-                        <div className="absolute top-0 right-0 md:w-32 md:h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform"></div>
-                        <Scan size={24} className="mb-2" />
-                        <div>
-                            <h3 className="font-bold leading-tight">AR Lens</h3>
-                            <p className="text-xs text-purple-100 opacity-80">Read Prescriptions</p>
-                        </div>
-                    </motion.div>
                 </div>
 
-                {/* Stats / Graph Placeholder column if needed, or leave empty if grid handles it */}
+                {/* Next Appointment */}
                 <div className="hidden md:block">
-                    {/* Can be used for extra widget/ad */}
                     <div className="glass-panel h-full p-6 flex flex-col justify-center items-center text-center bg-gradient-to-br from-[var(--gold-light)]/20 to-orange-50/50">
                         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
                             <Clock className="text-[var(--gold-primary)]" />
@@ -134,7 +100,7 @@ export default function DashboardPage() {
                             <motion.div
                                 key={i}
                                 whileHover={{ y: -5 }}
-                                onClick={() => setSelectedModel(model.id)}
+                                onClick={() => router.push('/dashboard/ai-diagnosis')}
                                 className="p-3 rounded-xl border border-gray-100 hover:border-[var(--gold-primary)] transition-all flex flex-col items-center text-center gap-2 cursor-pointer bg-white"
                             >
                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${model.color}`}>

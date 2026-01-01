@@ -46,7 +46,7 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
         setIsFetchingDoctors(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5000/api/doctors', {
+            const res = await fetch('http://localhost:5001/api/doctors', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -68,7 +68,7 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
             // Combine date and time
             const appointmentDate = new Date(`${formData.date}T${formData.time}`);
 
-            const res = await fetch('http://localhost:5000/api/appointments', {
+            const res = await fetch('http://localhost:5001/api/appointments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,8 +142,8 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
                                                         key={doc.id}
                                                         onClick={() => setFormData({ ...formData, doctorId: doc.id.toString() })}
                                                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 ${formData.doctorId === doc.id.toString()
-                                                                ? "border-[var(--gold-primary)] bg-[var(--gold-light)]/20"
-                                                                : "border-gray-100 hover:border-[var(--gold-primary)]/50"
+                                                            ? "border-[var(--gold-primary)] bg-[var(--gold-light)]/20"
+                                                            : "border-gray-100 hover:border-[var(--gold-primary)]/50"
                                                             }`}
                                                     >
                                                         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
@@ -211,8 +211,8 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
                                                     key={type}
                                                     onClick={() => setFormData({ ...formData, type })}
                                                     className={`p-4 rounded-xl border-2 cursor-pointer text-center font-medium ${formData.type === type
-                                                            ? "border-[var(--gold-primary)] bg-[var(--gold-light)]/20 text-[var(--gold-dark)]"
-                                                            : "border-gray-100 text-gray-500"
+                                                        ? "border-[var(--gold-primary)] bg-[var(--gold-light)]/20 text-[var(--gold-dark)]"
+                                                        : "border-gray-100 text-gray-500"
                                                         }`}
                                                 >
                                                     {type}

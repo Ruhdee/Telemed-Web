@@ -1,0 +1,16 @@
+{
+  "data": {
+    "patient_name": "Armando Coquia",
+    "medications": [
+      {
+        "name": "Amoxicillin",
+        "dosage": "500mg",
+        "frequency": "3 times a day",
+        "duration": "7 days",
+        "instructions": "Take 1 capsule 3 times a day for 7 days"
+      }
+    ]
+  },
+  "timestamp": 1767282707113,
+  "modelUsed": "gemini-2.5-flash"
+}

@@ -277,10 +277,18 @@ export default function DiseasePredictionPage() {
                                 {/* Dynamic Result Rendering */}
                                 <div className="space-y-4">
                                     {/* Handle various response formats from different models */}
-                                    {result.prediction && (
+                                    {result.prediction !== undefined && (
                                         <div>
                                             <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Prediction</div>
-                                            <div className="text-2xl font-bold text-gray-900">{result.prediction}</div>
+                                            <div className={`text-2xl font-bold ${(result.prediction === 0 || result.prediction === '0') ? 'text-green-600' :
+                                                    (result.prediction === 1 || result.prediction === '1') ? 'text-red-600' : 'text-gray-900'
+                                                }`}>
+                                                {
+                                                    (result.prediction === 0 || result.prediction === '0') ? "Not Detected" :
+                                                        (result.prediction === 1 || result.prediction === '1') ? "Detected" :
+                                                            result.prediction
+                                                }
+                                            </div>
                                         </div>
                                     )}
 
@@ -298,6 +306,68 @@ export default function DiseasePredictionPage() {
                                     {/* Fallback for simple string responses or unstructured data */}
                                     {Object.keys(result).map((key) => {
                                         if (key === 'prediction' || key === 'confidence' || key === 'success' || key === 'error') return null;
+
+                                        // Custom formatting for Predicted Class
+                                        if (key === 'predicted_class') {
+                                            const val = result[key];
+                                            const displayVal = val === 0 || val === '0' ? "Not Detected" :
+                                                val === 1 || val === '1' ? "Detected" : val;
+
+                                            // Determine color based on detection
+                                            const colorClass = (val === 1 || val === '1') ? "text-red-600" : "text-green-600";
+
+                                            return (
+                                                <div key={key}>
+                                                    <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Predicted Class</div>
+                                                    <div className={`text-lg font-bold ${colorClass}`}>
+                                                        {displayVal}
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
+
+                                        // Custom formatting for Probabilities (JSON object)
+                                        if (key === 'all_probabilities' || key === 'probabilities') {
+                                            let probs = result[key];
+                                            if (typeof probs === 'string') {
+                                                try {
+                                                    probs = JSON.parse(probs);
+                                                } catch (e) {
+                                                    // keep as is if parsing fails
+                                                }
+                                            }
+
+                                            if (typeof probs === 'object' && probs !== null) {
+                                                return (
+                                                    <div key={key} className="mt-4">
+                                                        <div className="text-sm text-gray-500 uppercase tracking-wider mb-2">Probabilities</div>
+                                                        <div className="space-y-3">
+                                                            {Object.entries(probs).map(([label, score]: [string, any]) => {
+                                                                const numScore = parseFloat(score);
+                                                                const percentage = isNaN(numScore) ? 0 : (numScore > 1 ? numScore : numScore * 100);
+
+                                                                return (
+                                                                    <div key={label} className="space-y-1">
+                                                                        <div className="flex justify-between text-xs font-medium text-gray-700">
+                                                                            <span>{label}</span>
+                                                                            <span>{percentage.toFixed(1)}%</span>
+                                                                        </div>
+                                                                        <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                                                                            <motion.div
+                                                                                initial={{ width: 0 }}
+                                                                                animate={{ width: `${percentage}%` }}
+                                                                                className={`h-full ${label.toLowerCase().includes('normal') || label.toLowerCase().includes('healthy') ? 'bg-green-500' : 'bg-red-500'}`}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                        }
+
                                         return (
                                             <div key={key}>
                                                 <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">{key.replace(/_/g, ' ')}</div>
