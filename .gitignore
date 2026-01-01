@@ -63,3 +63,4 @@ models/
 *.pth
 *.keras
 
+cough-detection/

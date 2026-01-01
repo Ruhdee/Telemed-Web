@@ -24,6 +24,7 @@ db.Nurse = require('./Nurse')(sequelize, Sequelize); // New
 db.Inventory = require('./Inventory')(sequelize, Sequelize);
 db.Order = require('./Order')(sequelize, Sequelize);
 db.Appointment = require('./Appointment')(sequelize, Sequelize);
+db.OfflineConsultation = require('./OfflineConsultation')(sequelize, Sequelize);
 
 // Associations
 
@@ -40,5 +41,12 @@ db.Order.belongsTo(db.Patient, { foreignKey: 'patientId', as: 'patient' });
 
 db.Inventory.hasMany(db.Order, { foreignKey: 'medicineId' });
 db.Order.belongsTo(db.Inventory, { foreignKey: 'medicineId', as: 'medicine' });
+
+// 3. Offline Consultations (Patient)
+db.Patient.hasMany(db.OfflineConsultation, { foreignKey: 'patientId', as: 'offlineConsultations' });
+db.OfflineConsultation.belongsTo(db.Patient, { foreignKey: 'patientId', as: 'patient' });
+
+db.Patient.hasMany(db.OfflineConsultation, { foreignKey: 'reviewedBy', as: 'reviewedConsultations' });
+db.OfflineConsultation.belongsTo(db.Patient, { foreignKey: 'reviewedBy', as: 'reviewer' });
 
 module.exports = db;

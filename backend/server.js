@@ -8,6 +8,7 @@ const { sequelize } = require("./models");
 const { createDatabaseIfNotExists } = require("./config/database");
 const apiRoutes = require("./routes/api");
 const ocrRoutes = require("./routes/ocr");
+const offlineConsultationRoutes = require("./routes/offlineConsultation");
 const socketHandler = require("./socket");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api", apiRoutes);
 app.use("/api", ocrRoutes); // FIX: OCR routes mounted
 app.use("/api/chatbot", require("./routes/chatbot")); // New Chatbot route
 app.use("/api/predict", require("./routes/predictionRoutes")); // FIX: Prediction routes mounted
+app.use("/api/offline-consultation", offlineConsultationRoutes); // Offline consultation routes
 
 /* Health Check */
 app.get("/", (req, res) => {
