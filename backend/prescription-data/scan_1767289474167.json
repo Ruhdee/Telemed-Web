@@ -1,0 +1,16 @@
+{
+  "data": {
+    "patient_name": "Armando Cequia",
+    "medications": [
+      {
+        "name": "Amoxicillin",
+        "dosage": "500mg",
+        "frequency": "3 times a day",
+        "duration": "7 days",
+        "instructions": "Take 1 capsule 3 times a day for 7 days. (Brand: Timiox, Quantity: #21 capsules)"
+      }
+    ]
+  },
+  "timestamp": 1767289474167,
+  "modelUsed": "gemini-2.5-flash"
+}
