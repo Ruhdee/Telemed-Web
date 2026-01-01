@@ -51,3 +51,7 @@ export default function AIDiagnosisPage() {
         </div>
     );
 }
+            </div >
+        </div >
+    );
+}

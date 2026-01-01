@@ -1,0 +1,16 @@
+{
+  "data": {
+    "patient_name": "Armando Coquia",
+    "medications": [
+      {
+        "name": "Tiniux Amoxicillin",
+        "dosage": "500mg",
+        "frequency": "3 times a day",
+        "duration": "7 days",
+        "instructions": "1 capsule 3 times a day for seven days"
+      }
+    ]
+  },
+  "timestamp": 1767269977124,
+  "modelUsed": "gemini-2.5-flash"
+}
