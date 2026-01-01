@@ -28,7 +28,11 @@ export default function DoctorDashboard() {
                 console.error(err);
             }
         };
-        fetchAppointments();
+
+        fetchAppointments(); // Initial fetch
+        const intervalId = setInterval(fetchAppointments, 15000); // Poll every 15s
+
+        return () => clearInterval(intervalId); // Cleanup
     }, []);
 
     // Format date helper

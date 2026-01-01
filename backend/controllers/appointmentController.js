@@ -22,6 +22,7 @@ exports.getDoctorAppointments = async (req, res) => {
 exports.bookAppointment = async (req, res) => {
     try {
         const { doctorId, date, symptoms, type } = req.body;
+        console.log('Book Appointment Request:', req.body); // Debug log
 
         // AI Score Mock logic (In real app, call python service or logic here)
         const riskScores = ['Low', 'Medium', 'High'];
@@ -41,6 +42,7 @@ exports.bookAppointment = async (req, res) => {
         });
 
         res.status(201).json(appointment);
+        console.log('Appointment created successfully:', appointment.id);
     } catch (err) {
         console.log(err);
         res.status(500).send("Error booking appointment");

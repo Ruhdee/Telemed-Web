@@ -83,11 +83,10 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
             });
 
             if (res.ok) {
-                onClose();
-                // Optionally trigger a refresh or toast here
-                alert("Appointment booked successfully!");
+                // Success! Show confirmation step
+                setStep(4);
             } else {
-                alert("Failed to book appointment");
+                alert("Failed to book appointment. Please try again.");
             }
         } catch (error) {
             console.error("Booking error", error);
@@ -222,13 +221,22 @@ export const BookAppointmentModal = ({ isOpen, onClose }: BookAppointmentModalPr
 
                                         <div className="flex justify-between mt-6">
                                             <Button variant="secondary" onClick={() => setStep(1)}>Back</Button>
-                                            <Button
-                                                variant="primary"
-                                                disabled={!formData.date || !formData.time || !formData.symptoms}
-                                                onClick={() => setStep(3)}
-                                            >
-                                                Review
-                                            </Button>
+                                            <div className="flex justify-between mt-6">
+                                                <Button variant="secondary" onClick={() => setStep(1)}>Back</Button>
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => {
+                                                        console.log("Review clicked. Data:", formData);
+                                                        if (!formData.date || !formData.time || !formData.symptoms) {
+                                                            alert("Please fill in all fields (Date, Time, Symptoms) to proceed.");
+                                                            return;
+                                                        }
+                                                        setStep(3);
+                                                    }}
+                                                >
+                                                    Review
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
