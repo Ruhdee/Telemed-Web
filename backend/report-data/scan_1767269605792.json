@@ -1,0 +1,163 @@
+{
+  "data": {
+    "patient_name": "Mr Dummy",
+    "tests": [
+      {
+        "name": "Haemoglobin",
+        "value": "15",
+        "unit": "g/dL",
+        "reference_range": "13 - 17",
+        "status": "Normal"
+      },
+      {
+        "name": "Total Leucocyte Count",
+        "value": "5000",
+        "unit": "/cumm",
+        "reference_range": "4000 - 10000",
+        "status": "Normal"
+      },
+      {
+        "name": "Neutrophils",
+        "value": "50",
+        "unit": "%",
+        "reference_range": "40 - 80",
+        "status": "Normal"
+      },
+      {
+        "name": "Lymphocytes",
+        "value": "40",
+        "unit": "%",
+        "reference_range": "20 - 40",
+        "status": "Normal"
+      },
+      {
+        "name": "Eosinophils",
+        "value": "1",
+        "unit": "%",
+        "reference_range": "1 - 6",
+        "status": "Normal"
+      },
+      {
+        "name": "Monocytes",
+        "value": "9",
+        "unit": "%",
+        "reference_range": "2 - 10",
+        "status": "Normal"
+      },
+      {
+        "name": "Basophils",
+        "value": "0.00",
+        "unit": "%",
+        "reference_range": "0 - 1",
+        "status": "Normal"
+      },
+      {
+        "name": "Absolute Neutrophils",
+        "value": "2500.00",
+        "unit": "/cumm",
+        "reference_range": "2000 - 7000",
+        "status": "Normal"
+      },
+      {
+        "name": "Absolute Lymphocytes",
+        "value": "2000.00",
+        "unit": "/cumm",
+        "reference_range": "1000 - 3000",
+        "status": "Normal"
+      },
+      {
+        "name": "Absolute Eosinophils",
+        "value": "50.00",
+        "unit": "/cumm",
+        "reference_range": "20 - 500",
+        "status": "Normal"
+      },
+      {
+        "name": "Absolute Monocytes",
+        "value": "450.00",
+        "unit": "/cumm",
+        "reference_range": "200 - 1000",
+        "status": "Normal"
+      },
+      {
+        "name": "RBC Count",
+        "value": "5",
+        "unit": "Million/cumm",
+        "reference_range": "4.5 - 5.5",
+        "status": "Normal"
+      },
+      {
+        "name": "MCV",
+        "value": "80.00",
+        "unit": "fL",
+        "reference_range": "81 - 101",
+        "status": "Low"
+      },
+      {
+        "name": "MCH",
+        "value": "30.00",
+        "unit": "pg",
+        "reference_range": "27 - 32",
+        "status": "Normal"
+      },
+      {
+        "name": "MCHC",
+        "value": "37.50",
+        "unit": "g/dL",
+        "reference_range": "31.5 - 34.5",
+        "status": "High"
+      },
+      {
+        "name": "Hct",
+        "value": "40",
+        "unit": "%",
+        "reference_range": "40 - 50",
+        "status": "Normal"
+      },
+      {
+        "name": "RDW-CV",
+        "value": "12",
+        "unit": "%",
+        "reference_range": "11.6 - 14.0",
+        "status": "Normal"
+      },
+      {
+        "name": "RDW-SD",
+        "value": "40",
+        "unit": "fL",
+        "reference_range": "39 - 46",
+        "status": "Normal"
+      },
+      {
+        "name": "Platelet Count",
+        "value": "300000",
+        "unit": "/cumm",
+        "reference_range": "150000 - 410000",
+        "status": "Normal"
+      },
+      {
+        "name": "PCT",
+        "value": "35",
+        "unit": null,
+        "reference_range": null,
+        "status": null
+      },
+      {
+        "name": "MPV",
+        "value": "8",
+        "unit": "fL",
+        "reference_range": "7.5 - 11.5",
+        "status": "Normal"
+      },
+      {
+        "name": "PDW",
+        "value": "9",
+        "unit": null,
+        "reference_range": null,
+        "status": null
+      }
+    ]
+  },
+  "timestamp": 1767269605792,
+  "modelUsed": "gemini-2.5-flash"
+}
