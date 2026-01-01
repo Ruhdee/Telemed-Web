@@ -4,7 +4,7 @@ const path = require('path');
 const envContent = `PORT=5000
 DB_HOST=localhost
 DB_USER=root
-DB_PASS=Vihaan@2014
+DB_PASS=Sagar@123
 DB_NAME=telemed_db
 JWT_SECRET=supersecretkey123
 `;

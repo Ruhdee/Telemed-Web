@@ -70,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const register = async (name: string, email: string, password: string, role: UserRole, phone: string, specialization?: string, experience?: number, shift?: string) => {
+        console.log("Registering with:", { name, email, password, role, phone, specialization, experience, shift });
         const response = await fetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: {
@@ -78,12 +79,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             body: JSON.stringify({ name, email, password, role, phone, specialization, experience, shift }),
         });
 
+        console.log("Register response status:", response.status);
+
         if (!response.ok) {
             const errorText = await response.text();
+            console.error("Register failed:", errorText);
             throw new Error(errorText || 'Registration failed');
         }
 
         const data = await response.json();
+        console.log("Register response data:", data);
         const userData: User = {
             id: data.id,
             name: data.name,
